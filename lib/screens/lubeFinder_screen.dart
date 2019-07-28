@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hp_lubricants/constants.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LubeFinderScreen extends StatefulWidget {
   static String id = 'lubeFinder_screen';
@@ -8,6 +10,21 @@ class LubeFinderScreen extends StatefulWidget {
 }
 
 class _LubeFinderScreenState extends State<LubeFinderScreen> {
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  Future signInAnonymous() async {
+    AuthResult authResult = await firebaseAuth.signInAnonymously();
+    print(authResult.user);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    signInAnonymous();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +167,7 @@ class GridButton extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-              child: Icon(Icons.motorcycle),
+              child: Icon(Icons.directions_bike),
             ),
             Expanded(
               flex: 1,
