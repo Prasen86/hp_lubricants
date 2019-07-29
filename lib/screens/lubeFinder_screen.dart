@@ -24,21 +24,6 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     super.initState();
 
     //signInAnonymous();
-    getVehicleList();
-  }
-
-  void getVehicleList() async {
-    final messages = await _firestore
-        .collection("vehicles")
-        .where("company", isEqualTo: "bajaj")
-        .getDocuments();
-    for (var message in messages.documents) {
-      //Get the whole Document
-      //print(message.data);
-
-      //Get specific field from a map
-      print(message.data["model"]);
-    }
   }
 
   @override
@@ -184,10 +169,6 @@ class GridButton extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Icon(Icons.directions_bike),
-            ),
-            Expanded(
-              flex: 1,
-              child: Text("TWO WHEELER"),
             ),
           ],
         ),
