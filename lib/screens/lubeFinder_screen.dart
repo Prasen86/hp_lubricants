@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hp_lubricants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hp_lubricants/screens/PickCar_screen.dart';
+
+List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
+List<String> fuelType = ["petrol", "diesel", "CNG"];
 
 class LubeFinderScreen extends StatefulWidget {
   static String id = 'lubeFinder_screen';
@@ -58,11 +62,13 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                     Expanded(
                       child: new GridButton(
                         color: kactiveColor,
+                        dataType: carType,
                       ),
                     ),
                     Expanded(
                       child: new GridButton(
                         color: kinactiveColor,
+                        dataType: fuelType,
                       ),
                     ),
                   ],
@@ -145,13 +151,22 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
 
 class GridButton extends StatelessWidget {
   final Color color;
+  final List<String> dataType;
 
-  GridButton({this.color});
+  GridButton({this.color, this.dataType});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        print(carType);
+        Navigator.pushNamed(
+          context,
+          PickCar.id,
+          //Passing Arguments through Navigator
+          arguments: dataType,
+        );
+      },
       child: Container(
         margin: EdgeInsets.all(10.0),
         decoration: BoxDecoration(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/lubeFinder_screen.dart';
+import 'screens/PickCar_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.id: (context) => SplashScreen(),
         LubeFinderScreen.id: (context) => LubeFinderScreen(),
+        PickCar.id: (context) => PickCar(),
       },
     );
   }
