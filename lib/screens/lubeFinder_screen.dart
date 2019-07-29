@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hp_lubricants/constants.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LubeFinderScreen extends StatefulWidget {
   static String id = 'lubeFinder_screen';
@@ -11,6 +11,7 @@ class LubeFinderScreen extends StatefulWidget {
 
 class _LubeFinderScreenState extends State<LubeFinderScreen> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
 
   Future signInAnonymous() async {
     AuthResult authResult = await firebaseAuth.signInAnonymously();
@@ -22,7 +23,22 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     // TODO: implement initState
     super.initState();
 
-    signInAnonymous();
+    //signInAnonymous();
+    getVehicleList();
+  }
+
+  void getVehicleList() async {
+    final messages = await _firestore
+        .collection("vehicles")
+        .where("company", isEqualTo: "bajaj")
+        .getDocuments();
+    for (var message in messages.documents) {
+      //Get the whole Document
+      //print(message.data);
+
+      //Get specific field from a map
+      print(message.data["model"]);
+    }
   }
 
   @override
