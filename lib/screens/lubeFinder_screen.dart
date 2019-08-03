@@ -34,7 +34,7 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     // TODO: implement initState
     super.initState();
 
-    //signInAnonymous();
+    signInAnonymous();
   }
 
   Future _awaitSyncData(BuildContext context, List<String> list) async {
@@ -42,6 +42,46 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
         //Passing Arguments through Navigator
         arguments: list);
     return result;
+  }
+
+  Future<List<String>> getMakeList() async {
+    List<String> list = new List();
+    try {
+      final messages = await _firestore
+          .collection("vehicles")
+          .where("type", isEqualTo: vehicles.wheels)
+          .getDocuments();
+      for (var message in messages.documents) {
+        var result = message.data["company"];
+        print(result);
+        list.add(result);
+      }
+    } catch (exception) {
+      print("Exception : $exception");
+      return null;
+    }
+    return list;
+  }
+
+
+  Future<List<String>> getModelList() async {
+    List<String> list = new List();
+    try {
+      final messages = await _firestore
+          .collection("vehicles")
+          .where("type", isEqualTo: vehicles.wheels)
+          .where("company", isEqualTo: vehicles.make)
+          .getDocuments();
+      for (var message in messages.documents) {
+        var result = message.data["model"];
+        print(result);
+        list.add(result);
+      }
+    } catch (exception) {
+      print("Exception : $exception");
+      return null;
+    }
+    return list;
   }
 
   @override
@@ -109,8 +149,8 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                       icon: Icons.question_answer,
                       onpressed: isMakeButtonActive
                           ? () async {
-                              var data =
-                                  await _awaitSyncData(context, fuelType);
+                              List<String> list = await getMakeList();
+                              var data = await _awaitSyncData(context, list);
                               setState(() {
                                 vehicles.make = data;
                                 isModelButtonActive = true;
@@ -122,8 +162,8 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                       icon: Icons.question_answer,
                       onpressed: isModelButtonActive
                           ? () async {
-                              var data =
-                                  await _awaitSyncData(context, fuelType);
+                              List<String> list = await getModelList();
+                              var data = await _awaitSyncData(context, list);
                               setState(() {
                                 vehicles.model = data;
                               });
