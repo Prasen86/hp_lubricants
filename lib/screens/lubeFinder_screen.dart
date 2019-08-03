@@ -63,7 +63,6 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     return list;
   }
 
-
   Future<List<String>> getModelList() async {
     List<String> list = new List();
     try {
