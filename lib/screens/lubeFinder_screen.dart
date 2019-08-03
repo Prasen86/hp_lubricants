@@ -3,9 +3,14 @@ import 'package:hp_lubricants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hp_lubricants/screens/PickCar_screen.dart';
+import 'package:hp_lubricants/VehicleClass.dart';
+import 'package:hp_lubricants/Utilities/VehicleChoiceMaterialButton.dart';
 
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
+bool isFuelButtonActive = false,
+    isMakeButtonActive = false,
+    isModelButtonActive = false;
 
 class LubeFinderScreen extends StatefulWidget {
   static String id = 'lubeFinder_screen';
@@ -16,6 +21,8 @@ class LubeFinderScreen extends StatefulWidget {
 class _LubeFinderScreenState extends State<LubeFinderScreen> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
+  Vehicles vehicles = new Vehicles(
+      wheels: "Wheels", fuel: "Fuel", make: "Make", model: "Model");
 
   Future signInAnonymous() async {
     AuthResult authResult = await firebaseAuth.signInAnonymously();
@@ -28,6 +35,13 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     super.initState();
 
     //signInAnonymous();
+  }
+
+  Future _awaitSyncData(BuildContext context, List<String> list) async {
+    final result = await Navigator.pushNamed(context, PickCar.id,
+        //Passing Arguments through Navigator
+        arguments: list);
+    return result;
   }
 
   @override
@@ -53,57 +67,79 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Expanded(
-                      child: new GridButton(
-                        color: kactiveColor,
-                        dataType: carType,
-                      ),
-                    ),
-                    Expanded(
-                      child: new GridButton(
-                        color: kinactiveColor,
-                        dataType: fuelType,
-                      ),
-                    ),
-                  ],
-                ),
+            Container(
+              margin: EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  VehicleChoiceMaterialButton(
+                    icon: Icons.motorcycle,
+                    title: vehicles.wheels,
+                    onpressed: () async {
+                      var data = await _awaitSyncData(context, carType);
+                      setState(() {
+                        vehicles.wheels = data;
+                        isFuelButtonActive = true;
+                      });
+                    },
+                  ),
+                  VehicleChoiceMaterialButton(
+                      title: vehicles.fuel,
+                      icon: Icons.question_answer,
+                      onpressed: isFuelButtonActive
+                          ? () async {
+                              var data =
+                                  await _awaitSyncData(context, fuelType);
+                              setState(() {
+                                vehicles.fuel = data;
+                                isMakeButtonActive = true;
+                              });
+                            }
+                          : null),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.all(5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  VehicleChoiceMaterialButton(
+                      title: vehicles.make,
+                      icon: Icons.question_answer,
+                      onpressed: isMakeButtonActive
+                          ? () async {
+                              var data =
+                                  await _awaitSyncData(context, fuelType);
+                              setState(() {
+                                vehicles.make = data;
+                                isModelButtonActive = true;
+                              });
+                            }
+                          : null),
+                  VehicleChoiceMaterialButton(
+                      title: vehicles.model,
+                      icon: Icons.question_answer,
+                      onpressed: isModelButtonActive
+                          ? () async {
+                              var data =
+                                  await _awaitSyncData(context, fuelType);
+                              setState(() {
+                                vehicles.model = data;
+                              });
+                            }
+                          : null),
+                ],
               ),
             ),
             Expanded(
-              flex: 1,
-              child: Container(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Expanded(
-                      child: new GridButton(
-                        color: kinactiveColor,
-                      ),
-                    ),
-                    Expanded(
-                      child: new GridButton(
-                        color: kinactiveColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
               child: Container(
                 child: ListView(
                   // This next line does the trick.
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.all(30.0),
+                      margin: EdgeInsets.all(5.0),
                       width: 200.0,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -141,49 +177,6 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class GridButton extends StatelessWidget {
-  final Color color;
-  final List<String> dataType;
-
-  GridButton({this.color, this.dataType});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print(carType);
-        Navigator.pushNamed(
-          context,
-          PickCar.id,
-          //Passing Arguments through Navigator
-          arguments: dataType,
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(10.0),
-          border: Border.all(
-              color: Colors.black12, width: 2.0, style: BorderStyle.solid),
-        ),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Text("TYPE OF CAR"),
-            ),
-            Expanded(
-              flex: 2,
-              child: Icon(Icons.directions_bike),
             ),
           ],
         ),

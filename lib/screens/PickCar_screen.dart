@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hp_lubricants/VehicleClass.dart';
 
 class PickCar extends StatelessWidget {
   static String id = 'pickCar_screen';
@@ -28,6 +29,10 @@ class PickCar extends StatelessWidget {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text('${dataList[index]}'),
+            onTap: () {
+              // Vehicles vehicles = new Vehicles(wheels: dataList[index]);
+              Navigator.pop(context, dataList[index]);
+            },
           );
         },
       ),
