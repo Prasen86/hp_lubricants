@@ -5,9 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hp_lubricants/screens/PickCar_screen.dart';
 import 'package:hp_lubricants/VehicleClass.dart';
 import 'package:hp_lubricants/Utilities/VehicleChoiceMaterialButton.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
+List<String> lubes = ["Lal Ghoda", "ATF", "Enklo", "Milcy Turbo"];
+
 bool isFuelButtonActive = false,
     isMakeButtonActive = false,
     isModelButtonActive = false;
@@ -81,6 +84,28 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
       return null;
     }
     return list;
+  }
+
+  Future<List<String>> getLubeList() async {
+    lubes = new List();
+    try {
+      final messages = await _firestore
+          .collection("vehicles")
+          .where("type", isEqualTo: vehicles.wheels)
+          .where("company", isEqualTo: vehicles.make)
+          .where("model", isEqualTo: vehicles.model)
+          .getDocuments();
+      var result = messages.documents[0].data["lube"];
+      setState(() {
+        lubes = List.from(result);
+      });
+
+      print(lubes);
+    } catch (exception) {
+      print("Exception : $exception");
+      return null;
+    }
+    return lubes;
   }
 
   @override
@@ -165,6 +190,7 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                               var data = await _awaitSyncData(context, list);
                               setState(() {
                                 vehicles.model = data;
+                                getLubeList();
                               });
                             }
                           : null),
@@ -172,54 +198,133 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
               ),
             ),
             Expanded(
-              child: Container(
-                child: ListView(
-                  // This next line does the trick.
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(5.0),
-                      width: 200.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                            color: Colors.blue,
-                            width: 2.0,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(30.0),
-                      width: 200.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                            color: Colors.blue,
-                            width: 2.0,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(30.0),
-                      width: 200.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(
-                            color: Colors.blue,
-                            width: 2.0,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+              child: ExpandableList(),
+            )
           ],
         ),
       ),
+    );
+  }
+}
+
+class ContainerWidget extends StatelessWidget {
+  const ContainerWidget({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView(
+        // This next line does the trick.
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.all(5.0),
+            width: 200.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                  color: Colors.blue, width: 2.0, style: BorderStyle.solid),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(30.0),
+            width: 200.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                  color: Colors.blue, width: 2.0, style: BorderStyle.solid),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(30.0),
+            width: 200.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                  color: Colors.blue, width: 2.0, style: BorderStyle.solid),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StickyList extends StatelessWidget {
+  final list = new List.generate(10, (i) => "Item ${i + 1}");
+  @override
+  Widget build(BuildContext context) {
+    return new ListView.builder(
+      itemBuilder: (context, i) => new StickyHeader(
+          header: new Container(
+            height: 40.0,
+            child: new Text("Header $i"),
+            padding: const EdgeInsets.all(8.0),
+          ),
+          content: new Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: new Column(
+                children: list
+                    .map((val) => new ListTile(
+                          title: new Text(val),
+                        ))
+                    .toList()),
+          )),
+    );
+  }
+}
+
+class ExpandableList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new ListView.builder(
+      itemBuilder: (context, i) => ExpansionTile(
+              title: Container(
+                child: new Text(lubes[i]),
+              ),
+              children: [
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 5,
+                    itemBuilder: (_, i) {
+                      return (Text('item $i'));
+                    })
+              ]),
+      itemCount: lubes.length,
+    );
+  }
+}
+
+class LubeList extends StatelessWidget {
+  final list = new List.generate(10, (i) => "Item ${i + 1}");
+  @override
+  Widget build(BuildContext context) {
+    return new ListView.builder(
+      itemCount: 4,
+      //shrinkWrap: true,
+      itemBuilder: (context, i) => new StickyHeader(
+            header: new Container(
+              height: 40.0,
+              child: new Text("Header $i"),
+              padding: const EdgeInsets.all(8.0),
+            ),
+            content: new Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: new ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      ListTile(
+                        title: Text("Hello$index"),
+                        //color: Colors.white,
+                      );
+                    })),
+          ),
     );
   }
 }
