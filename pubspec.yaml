@@ -26,8 +26,7 @@ dependencies:
   cloud_firestore: ^0.12.8
   firebase_core: ^0.4.0+8
   firebase_auth: ^0.12.0
-  sticky_header_list: ^1.0.6
-  sticky_headers: ^0.1.8
+
 
 dev_dependencies:
   flutter_test:

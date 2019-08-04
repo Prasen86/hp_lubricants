@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hp_lubricants/screens/PickCar_screen.dart';
 import 'package:hp_lubricants/VehicleClass.dart';
+import 'package:hp_lubricants/Utilities/LubeClass.dart';
 import 'package:hp_lubricants/Utilities/VehicleChoiceMaterialButton.dart';
-import 'package:sticky_headers/sticky_headers.dart';
 
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
@@ -27,6 +27,7 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
   final Firestore _firestore = Firestore.instance;
   Vehicles vehicles = new Vehicles(
       wheels: "Wheels", fuel: "Fuel", make: "Make", model: "Model");
+  Lube lube = new Lube();
 
   Future signInAnonymous() async {
     AuthResult authResult = await firebaseAuth.signInAnonymously();
@@ -101,12 +102,29 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
         lubes = List.from(result);
       });
 
-      print(lubes);
+      // print(lubes);
     } catch (exception) {
       print("Exception : $exception");
       return null;
     }
     return lubes;
+  }
+
+  Future<List<String>> getPackageList() async {
+    lube = new Lube();
+    try {
+      for (int i = 0; i < lubes.length; i++) {
+        var messages = await _firestore.collection("vehicles").getDocuments();
+        print(lubes[i]);
+        for (var message in messages.documents) {
+          print("Packages:$message");
+        }
+      }
+    } catch (exception) {
+      print("Exception : $exception");
+      return null;
+    }
+    return null;
   }
 
   @override
@@ -198,84 +216,18 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                 ],
               ),
             ),
+            RaisedButton(
+              child: Text("Get Package"),
+              onPressed: () {
+                getPackageList();
+              },
+            ),
             Expanded(
               child: ExpandableList(),
             )
           ],
         ),
       ),
-    );
-  }
-}
-
-class ContainerWidget extends StatelessWidget {
-  const ContainerWidget({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        // This next line does the trick.
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.all(5.0),
-            width: 200.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                  color: Colors.blue, width: 2.0, style: BorderStyle.solid),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(30.0),
-            width: 200.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                  color: Colors.blue, width: 2.0, style: BorderStyle.solid),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.all(30.0),
-            width: 200.0,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                  color: Colors.blue, width: 2.0, style: BorderStyle.solid),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class StickyList extends StatelessWidget {
-  final list = new List.generate(10, (i) => "Item ${i + 1}");
-  @override
-  Widget build(BuildContext context) {
-    return new ListView.builder(
-      itemBuilder: (context, i) => new StickyHeader(
-          header: new Container(
-            height: 40.0,
-            child: new Text("Header $i"),
-            padding: const EdgeInsets.all(8.0),
-          ),
-          content: new Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: new Column(
-                children: list
-                    .map((val) => new ListTile(
-                          title: new Text(val),
-                        ))
-                    .toList()),
-          )),
     );
   }
 }
@@ -309,35 +261,6 @@ class ExpandableList extends StatelessWidget {
                     })
               ]),
       itemCount: lubes.length,
-    );
-  }
-}
-
-class LubeList extends StatelessWidget {
-  final list = new List.generate(10, (i) => "Item ${i + 1}");
-  @override
-  Widget build(BuildContext context) {
-    return new ListView.builder(
-      itemCount: 4,
-      //shrinkWrap: true,
-      itemBuilder: (context, i) => new StickyHeader(
-            header: new Container(
-              height: 40.0,
-              child: new Text("Header $i"),
-              padding: const EdgeInsets.all(8.0),
-            ),
-            content: new Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: new ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      ListTile(
-                        title: Text("Hello$index"),
-                        //color: Colors.white,
-                      );
-                    })),
-          ),
     );
   }
 }
