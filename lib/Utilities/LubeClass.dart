@@ -1,6 +1,8 @@
 class Lube {
   String name;
   String packageName;
-  String invoicePrice;
-  String mrp;
+  int invoicePrice;
+  int mrp;
+
+  Lube({this.packageName, this.invoicePrice, this.mrp, this.name});
 }

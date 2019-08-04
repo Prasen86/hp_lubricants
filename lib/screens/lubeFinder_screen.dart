@@ -110,23 +110,6 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     return lubes;
   }
 
-  Future<List<String>> getPackageList() async {
-    lube = new Lube();
-    try {
-      for (int i = 0; i < lubes.length; i++) {
-        var messages = await _firestore.collection("vehicles").getDocuments();
-        print(lubes[i]);
-        for (var message in messages.documents) {
-          print("Packages:$message");
-        }
-      }
-    } catch (exception) {
-      print("Exception : $exception");
-      return null;
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,7 +202,7 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
             RaisedButton(
               child: Text("Get Package"),
               onPressed: () {
-                getPackageList();
+                // getPackageList();
               },
             ),
             Expanded(
@@ -232,11 +215,44 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
   }
 }
 
+Future<List<Lube>> getPackageList() async {
+  List<Lube> list = new List<Lube>();
+  try {
+    for (int i = 0; i < lubes.length; i++) {
+      String lubeName = lubes[i];
+      var messages = await Firestore.instance
+          .collection("lubes")
+          .document(lubeName)
+          .collection("package")
+          .getDocuments();
+      for (var message in messages.documents) {
+        Lube lube = new Lube(
+          name: lubeName,
+          mrp: message.data["mrp"],
+          packageName: message.documentID,
+          invoicePrice: message.data["invoice price"],
+        );
+        list.add(lube);
+      }
+    }
+    print(list[2].name);
+  } catch (exception) {
+    print("Exception : $exception");
+    return null;
+  }
+  return list;
+}
+
 class ExpandableList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Lube> package;
     return new ListView.builder(
       itemBuilder: (context, i) => ExpansionTile(
+              onExpansionChanged: (b) async {
+                //TODO
+                package = await getPackageList();
+              },
               title: Container(
                 child: new Text(lubes[i]),
               ),
@@ -249,7 +265,7 @@ class ExpandableList extends StatelessWidget {
                         margin: EdgeInsets.all(5.0),
                         height: 50.0,
                         child: (Text(
-                          (packages[i]),
+                          (package[i].packageName),
                           style: null,
                         )),
                         decoration: BoxDecoration(
