@@ -10,6 +10,7 @@ import 'package:sticky_headers/sticky_headers.dart';
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
 List<String> lubes = ["Lal Ghoda", "ATF", "Enklo", "Milcy Turbo"];
+List<String> packages = ["1 lt", "500 ml"];
 
 bool isFuelButtonActive = false,
     isMakeButtonActive = false,
@@ -290,9 +291,21 @@ class ExpandableList extends StatelessWidget {
               children: [
                 ListView.builder(
                     shrinkWrap: true,
-                    itemCount: 5,
+                    itemCount: packages.length,
                     itemBuilder: (_, i) {
-                      return (Text('item $i'));
+                      return Container(
+                        margin: EdgeInsets.all(5.0),
+                        height: 50.0,
+                        child: (Text(
+                          (packages[i]),
+                          style: null,
+                        )),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(5.0),
+                          color: Colors.white,
+                        ),
+                      );
                     })
               ]),
       itemCount: lubes.length,
