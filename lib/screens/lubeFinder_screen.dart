@@ -193,7 +193,7 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                               var data = await _awaitSyncData(context, list);
                               setState(() {
                                 vehicles.model = data;
-                                getLubeList();
+                                //getLubeList();
                               });
                             }
                           : null),
@@ -203,7 +203,8 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
             RaisedButton(
               child: Text("Get Package"),
               onPressed: () async {
-                package = await getPackageList();
+                package = await getPackagesList(vehicles);
+                setState(() {});
               },
             ),
             Expanded(
@@ -218,22 +219,61 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
 
 Future<List<Lube>> getPackageList() async {
   List<Lube> listLubes = new List<Lube>();
-  List<Package> listPackages = new List<Package>();
+
   try {
     for (int i = 0; i < lubes.length; i++) {
       String lubeName = lubes[i];
+      List<Package> listPackages = new List<Package>();
       var messages = await Firestore.instance
           .collection("lubes")
           .document(lubeName)
           .collection("package")
           .getDocuments();
       for (var message in messages.documents) {
-//        Lube lube = new Lube(
-//          name: lubeName,
-//          mrp: message.data["mrp"],
-//          packageName: message.documentID,
-//          invoicePrice: message.data["invoice price"],
-//        );
+        Package tempPackage = new Package(
+          mrp: message.data["mrp"],
+          packageName: message.documentID,
+          invoicePrice: message.data["invoice price"],
+        );
+        listPackages.add(tempPackage);
+      }
+      Lube tempLube = new Lube(
+        name: lubeName,
+        packages: listPackages,
+      );
+      listLubes.add(tempLube);
+    }
+    print(listLubes[0].name);
+  } catch (exception) {
+    print("Exception : $exception");
+    return null;
+  }
+  return listLubes;
+}
+
+Future<List<Lube>> getPackagesList(Vehicles vehicle) async {
+  List<Lube> listLubes = new List<Lube>();
+
+  try {
+    List<String> lubeNamesList = new List<String>();
+    final messages = await Firestore.instance
+        .collection("vehicles")
+        .where("type", isEqualTo: vehicle.wheels)
+        .where("company", isEqualTo: vehicle.make)
+        .where("model", isEqualTo: vehicle.model)
+        .getDocuments();
+    var result = messages.documents[0].data["lube"];
+    lubeNamesList = List.from(result);
+
+    for (int i = 0; i < lubeNamesList.length; i++) {
+      String lubeName = lubeNamesList[i];
+      List<Package> listPackages = new List<Package>();
+      var messages = await Firestore.instance
+          .collection("lubes")
+          .document(lubeName)
+          .collection("package")
+          .getDocuments();
+      for (var message in messages.documents) {
         Package tempPackage = new Package(
           mrp: message.data["mrp"],
           packageName: message.documentID,
@@ -272,25 +312,25 @@ class ExpandableList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Lube> packageForEach = [];
     return new ListView.builder(
-      itemBuilder: (context, i) => ExpansionTile(
+      itemBuilder: (context, index) => ExpansionTile(
               onExpansionChanged: (b) async {
                 //package = await getPackageList();
 //                packageForEach = getPackageForEachLube(package, lubes[i]);
 //                print(packageForEach.length);
               },
               title: Container(
-                child: new Text(lubes[i]),
+                child: new Text(package[index].name),
               ),
               children: [
                 ListView.builder(
                     shrinkWrap: true,
-                    itemCount: package.length,
+                    itemCount: package[index].packages.length,
                     itemBuilder: (_, i) {
                       return Container(
                         margin: EdgeInsets.all(5.0),
                         height: 50.0,
                         child: (Text(
-                          (package[i].name),
+                          (package[index].packages[i].packageName),
                           style: null,
                         )),
                         decoration: BoxDecoration(
@@ -301,7 +341,7 @@ class ExpandableList extends StatelessWidget {
                       );
                     })
               ]),
-      itemCount: lubes.length,
+      itemCount: package.length,
     );
   }
 }
