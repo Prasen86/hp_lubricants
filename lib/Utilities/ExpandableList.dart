@@ -10,7 +10,7 @@ class ExpandableList extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListView.builder(
       itemBuilder: (context, index) => ExpansionTile(
-               title: Container(
+              title: Container(
                 child: new Text(package[index].name),
               ),
               children: [
