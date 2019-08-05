@@ -11,6 +11,7 @@ List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
 List<String> lubes = ["Lal Ghoda", "ATF", "Enklo", "Milcy Turbo"];
 List<String> packages = ["1 lt", "500 ml"];
+List<Lube> package = [];
 
 bool isFuelButtonActive = false,
     isMakeButtonActive = false,
@@ -201,8 +202,8 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
             ),
             RaisedButton(
               child: Text("Get Package"),
-              onPressed: () {
-                // getPackageList();
+              onPressed: () async {
+                package = await getPackageList();
               },
             ),
             Expanded(
@@ -216,7 +217,8 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
 }
 
 Future<List<Lube>> getPackageList() async {
-  List<Lube> list = new List<Lube>();
+  List<Lube> listLubes = new List<Lube>();
+  List<Package> listPackages = new List<Package>();
   try {
     for (int i = 0; i < lubes.length; i++) {
       String lubeName = lubes[i];
@@ -226,32 +228,55 @@ Future<List<Lube>> getPackageList() async {
           .collection("package")
           .getDocuments();
       for (var message in messages.documents) {
-        Lube lube = new Lube(
-          name: lubeName,
+//        Lube lube = new Lube(
+//          name: lubeName,
+//          mrp: message.data["mrp"],
+//          packageName: message.documentID,
+//          invoicePrice: message.data["invoice price"],
+//        );
+        Package tempPackage = new Package(
           mrp: message.data["mrp"],
           packageName: message.documentID,
           invoicePrice: message.data["invoice price"],
         );
-        list.add(lube);
+        listPackages.add(tempPackage);
       }
+      Lube tempLube = new Lube(
+        name: lubeName,
+        packages: listPackages,
+      );
+      listLubes.add(tempLube);
     }
-    print(list[2].name);
+    print(listLubes[0].name);
   } catch (exception) {
     print("Exception : $exception");
     return null;
   }
-  return list;
+  return listLubes;
+}
+
+List<Lube> getPackageForEachLube(List<Lube> lubePackages, String lubeNameEach) {
+  List<Lube> listOfPacksForEachLube = new List<Lube>();
+  print(lubePackages.length);
+  for (int i = 0; i < lubePackages.length; i++) {
+    if (lubePackages[i].name == lubeNameEach) {
+      listOfPacksForEachLube.add(lubePackages[i]);
+    }
+  }
+  print(listOfPacksForEachLube.length);
+  return listOfPacksForEachLube;
 }
 
 class ExpandableList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Lube> package;
+    List<Lube> packageForEach = [];
     return new ListView.builder(
       itemBuilder: (context, i) => ExpansionTile(
               onExpansionChanged: (b) async {
-                //TODO
-                package = await getPackageList();
+                //package = await getPackageList();
+//                packageForEach = getPackageForEachLube(package, lubes[i]);
+//                print(packageForEach.length);
               },
               title: Container(
                 child: new Text(lubes[i]),
@@ -259,13 +284,13 @@ class ExpandableList extends StatelessWidget {
               children: [
                 ListView.builder(
                     shrinkWrap: true,
-                    itemCount: packages.length,
+                    itemCount: package.length,
                     itemBuilder: (_, i) {
                       return Container(
                         margin: EdgeInsets.all(5.0),
                         height: 50.0,
                         child: (Text(
-                          (package[i].packageName),
+                          (package[i].name),
                           style: null,
                         )),
                         decoration: BoxDecoration(
