@@ -6,9 +6,9 @@ import 'package:hp_lubricants/Utilities/VehicleClass.dart';
 import 'package:hp_lubricants/Utilities/LubeClass.dart';
 import 'package:hp_lubricants/Utilities/VehicleChoiceMaterialButton.dart';
 import 'package:hp_lubricants/Utilities/ExpandableList.dart';
+import 'package:hp_lubricants/Utilities/CustomButton.dart';
 
-List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
-List<String> fuelType = ["petrol", "diesel", "CNG"];
+
 List<Lube> package = [];
 
 bool isFuelButtonActive = false,
@@ -55,8 +55,7 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
         centerTitle: true,
         title: Text(
           'HP Lubricants',
-          style: TextStyle(
-              fontFamily: 'LibreBaskerville', fontWeight: FontWeight.bold),
+          style: appBarTextStyle,
         ),
         leading: Image.asset(
           'assets/images/icon_hplubricrant.png',
@@ -139,12 +138,15 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                 ],
               ),
             ),
-            RaisedButton(
-              child: Text("Get Package"),
-              onPressed: () async {
-                package = await Lube.getPackagesList(vehicles);
-                setState(() {});
-              },
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 40.0),
+              child: new CustomButton(
+                title: "Get PACKAGE",
+                onpressed: () async {
+                  package = await Lube.getPackagesList(vehicles);
+                  setState(() {});
+                },
+              ),
             ),
             Expanded(
               child: ExpandableList(

@@ -24,7 +24,10 @@ class VehicleChoiceMaterialButton extends StatelessWidget {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Text(title),
+            Text(
+              title.toUpperCase(),
+              style: vehicleChooseTextStyle,
+            ),
             Icon(icon),
           ],
         ),
