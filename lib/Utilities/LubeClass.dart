@@ -32,7 +32,7 @@ class Lube {
         for (var message in messages.documents) {
           Package tempPackage = new Package(
             mrp: message.data["mrp"],
-            packageName: message.documentID,
+            packageName: message.data["packagename"],
             invoicePrice: message.data["invoice price"],
           );
           listPackages.add(tempPackage);
