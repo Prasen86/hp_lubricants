@@ -3,9 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Lube {
   String name;
+  String type;
   List<Package> packages;
 
-  Lube({this.name, this.packages});
+  Lube({this.name, this.type, this.packages});
 
   static Future<List<Lube>> getPackagesList(Vehicles vehicle) async {
     List<Lube> listLubes = new List<Lube>();
@@ -23,6 +24,11 @@ class Lube {
 
       for (int i = 0; i < lubeNamesList.length; i++) {
         String lubeName = lubeNamesList[i];
+        final lubeType = await Firestore.instance
+            .collection("lubes")
+            .document(lubeName)
+            .get();
+        String type = lubeType.data["type"];
         List<Package> listPackages = new List<Package>();
         var messages = await Firestore.instance
             .collection("lubes")
@@ -39,6 +45,7 @@ class Lube {
         }
         Lube tempLube = new Lube(
           name: lubeName,
+          type: type,
           packages: listPackages,
         );
         listLubes.add(tempLube);

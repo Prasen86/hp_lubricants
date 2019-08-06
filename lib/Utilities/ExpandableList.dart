@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hp_lubricants/constants.dart';
 import 'LubeClass.dart';
 
 class ExpandableList extends StatelessWidget {
@@ -10,8 +11,23 @@ class ExpandableList extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListView.builder(
       itemBuilder: (context, index) => ExpansionTile(
-              title: Container(
-                child: new Text(package[index].name),
+              backgroundColor: kListColor,
+              leading: new Image(
+                //image: new AssetImage("assets/images/racer4.jpg"),
+                //TODO
+                image: NetworkImage(
+                    "https://firebasestorage.googleapis.com/v0/b/hp-lubricants-rhythm.appspot.com/o/Racer%2015W-50%202.5%20Ltr.jpg?alt=media&token=9d39c4fa-b91b-4846-948c-68d3d2b8dbd7"),
+                fit: BoxFit.cover,
+              ),
+              title: ListTile(
+                title: new Text(
+                  package[index].name.toUpperCase(),
+                  style: titleTextStyple,
+                ),
+                subtitle: Text(
+                  package[index].type,
+                  style: subTitleTextStyle,
+                ),
               ),
               children: [
                 ListView.builder(

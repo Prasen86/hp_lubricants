@@ -7,6 +7,7 @@ const Color kbackgroundStartColor = Color(0xFF000912);
 const Color kactiveColor = Colors.white;
 const Color kinactiveColor = Colors.white70;
 const Color kButtonColor = Color(0xFF000912);
+const Color kListColor = Color(0xFF002749);
 
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
@@ -18,3 +19,13 @@ const TextStyle vehicleChooseTextStyle = TextStyle(
     fontFamily: 'LibreBaskerville',
     fontWeight: FontWeight.w900,
     fontSize: 10.0);
+
+const TextStyle subTitleTextStyle = TextStyle(
+    color: Colors.grey,
+    fontFamily: 'LibreBaskerville',
+    fontStyle: FontStyle.italic);
+
+const TextStyle titleTextStyple = TextStyle(
+    color: Colors.white,
+    fontFamily: 'LibreBaskerville',
+    fontWeight: FontWeight.bold);
