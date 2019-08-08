@@ -38,80 +38,118 @@ class ExpandableList extends StatelessWidget {
                         margin: EdgeInsets.all(5.0),
                         height: 50.0,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Expanded(
-                              flex: 1,
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    "Pack Size :",
-                                    style: subTitleTextStyle,
-                                  ),
-                                  Text(
-                                    (package[index].packages[i].packageName),
-                                    style: packDescTextStyle,
-                                  ),
-                                ],
+                              flex: 2,
+                              child: Container(
+                                margin: EdgeInsets.only(left: 5.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "Pack:",
+                                      style: subTitleTextStyle,
+                                    ),
+                                    Text(
+                                      (package[index].packages[i].packageName),
+                                      style: packDescTextStyle,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             Expanded(
-                              flex: 1,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    ("Rs. "),
-                                    style: packDescTextStyle,
-                                  ),
-                                  Text(
-                                    (package[index].packages[i].mrp.toString()),
-                                    style: packMrpTextStyle,
-                                  ),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    (package[index]
-                                        .packages[i]
-                                        .invoicePrice
-                                        .toString()),
-                                    style: packRateTextStyle,
-                                  ),
-                                  Container(
-                                    child: Icon(Icons.add),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        border: Border.all(
-                                            style: BorderStyle.solid)),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.symmetric(vertical: 3.0),
-                                    child: TextFormField(
-                                      initialValue: "1",
-                                      keyboardType: TextInputType.number,
-                                      style: textFieldTextStyle,
+                              flex: 3,
+                              child: Container(
+                                margin: EdgeInsets.only(right: 5.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text(
+                                      ("Rs. "),
+                                      style: packDescTextStyle,
                                     ),
-                                    constraints: kSizeConstraints,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        border: Border.all(
-                                            style: BorderStyle.solid)),
-                                  ),
-                                  Container(
-                                    child: Icon(Icons.remove),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        border: Border.all(
-                                            style: BorderStyle.solid)),
-                                  ),
-                                  Icon(
-                                    Icons.add_shopping_cart,
-                                  ),
-                                ],
+                                    Text(
+                                      (package[index]
+                                          .packages[i]
+                                          .mrp
+                                          .toString()),
+                                      style: packMrpTextStyle,
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Text(
+                                      (package[index]
+                                          .packages[i]
+                                          .invoicePrice
+                                          .toString()),
+                                      style: packRateTextStyle,
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Container(
+                                      child: Icon(
+                                        Icons.add,
+                                        size: kIconSize,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: kButtonColor,
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(
+                                              style: BorderStyle.solid)),
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 8.0),
+                                      child: TextFormField(
+                                        initialValue: "1",
+                                        textAlign: TextAlign.center,
+                                        keyboardType: TextInputType.number,
+                                        style: textFieldTextStyle,
+                                      ),
+                                      constraints: kSizeConstraints,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(
+                                              style: BorderStyle.solid)),
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    Container(
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: kIconSize,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: kButtonColor,
+                                          shape: BoxShape.rectangle,
+                                          border: Border.all(
+                                              style: BorderStyle.solid)),
+                                    ),
+                                    SizedBox(
+                                      width: 5.0,
+                                    ),
+                                    CircleAvatar(
+                                      child: Icon(
+                                        Icons.add_shopping_cart,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
+                        //TODO
+                        //remove hardcoding of Sized Box and Flex
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(5.0),

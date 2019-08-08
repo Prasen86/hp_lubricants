@@ -10,6 +10,8 @@ const Color kButtonColor = Color(0xFF000912);
 const Color kListColor = Color(0xFF002749);
 const Color boxButtonColor = Color(0xFF4C4F5E);
 
+const double kIconSize = 15.0;
+
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
 
@@ -46,9 +48,10 @@ const TextStyle packMrpTextStyle = TextStyle(
     decoration: TextDecoration.lineThrough);
 
 const TextStyle packRateTextStyle = TextStyle(
-    color: Colors.red,
-    fontFamily: 'LibreBaskerville',
-    fontWeight: FontWeight.bold);
+  color: Colors.red,
+  fontFamily: 'LibreBaskerville',
+  fontWeight: FontWeight.bold,
+);
 
 const TextStyle textFieldTextStyle = TextStyle(
     color: Colors.black, fontFamily: 'LibreBaskerville', fontSize: 12.0);
