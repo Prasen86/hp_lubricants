@@ -22,7 +22,7 @@ class ExpandableList extends StatelessWidget {
               title: ListTile(
                 title: new Text(
                   package[index].name.toUpperCase(),
-                  style: titleTextStyple,
+                  style: titleTextStyle,
                 ),
                 subtitle: Text(
                   package[index].type,
@@ -36,11 +36,55 @@ class ExpandableList extends StatelessWidget {
                     itemBuilder: (_, i) {
                       return Container(
                         margin: EdgeInsets.all(5.0),
-                        height: 50.0,
-                        child: (Text(
-                          (package[index].packages[i].packageName),
-                          style: null,
-                        )),
+                        height: 40.0,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    "Pack Size :",
+                                    style: subTitleTextStyle,
+                                  ),
+                                  Text(
+                                    (package[index].packages[i].packageName),
+                                    style: packDescTextStyle,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    ("Rs. "),
+                                    style: packDescTextStyle,
+                                  ),
+                                  Text(
+                                    (package[index].packages[i].mrp.toString()),
+                                    style: packMrpTextStyle,
+                                  ),
+                                  SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    (package[index]
+                                        .packages[i]
+                                        .invoicePrice
+                                        .toString()),
+                                    style: packRateTextStyle,
+                                  ),
+                                  Icon(
+                                    Icons.add_shopping_cart,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                         decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(5.0),

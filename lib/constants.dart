@@ -25,7 +25,22 @@ const TextStyle subTitleTextStyle = TextStyle(
     fontFamily: 'LibreBaskerville',
     fontStyle: FontStyle.italic);
 
-const TextStyle titleTextStyple = TextStyle(
+const TextStyle titleTextStyle = TextStyle(
     color: Colors.white,
+    fontFamily: 'LibreBaskerville',
+    fontWeight: FontWeight.bold);
+
+const TextStyle packDescTextStyle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'LibreBaskerville',
+    fontWeight: FontWeight.bold);
+
+const TextStyle packMrpTextStyle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'LibreBaskerville',
+    decoration: TextDecoration.lineThrough);
+
+const TextStyle packRateTextStyle = TextStyle(
+    color: Colors.red,
     fontFamily: 'LibreBaskerville',
     fontWeight: FontWeight.bold);
