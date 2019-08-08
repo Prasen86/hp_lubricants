@@ -57,6 +57,45 @@ class Lube {
     }
     return listLubes;
   }
+
+  static Future<List<Lube>> getAllLubesList() async {
+    List<Lube> listLubes = new List<Lube>();
+
+    try {
+      List<String> lubeNamesList = new List<String>();
+      final messages =
+          await Firestore.instance.collection("lubes").getDocuments();
+
+      for (var message in messages.documents) {
+        String lubeName = message.data["name"];
+        String type = message.data["type"];
+        List<Package> listPackages = new List<Package>();
+        var messagePacks = await Firestore.instance
+            .collection("lubes")
+            .document(lubeName)
+            .collection("package")
+            .getDocuments();
+        for (var messagePack in messagePacks.documents) {
+          Package tempPackage = new Package(
+            mrp: messagePack.data["mrp"],
+            packageName: messagePack.data["packagename"],
+            invoicePrice: messagePack.data["invoice price"],
+          );
+          listPackages.add(tempPackage);
+        }
+        Lube tempLube = new Lube(
+          name: lubeName,
+          type: type,
+          packages: listPackages,
+        );
+        listLubes.add(tempLube);
+      }
+    } catch (exception) {
+      print("Exception : $exception");
+      return null;
+    }
+    return listLubes;
+  }
 }
 
 class Package {

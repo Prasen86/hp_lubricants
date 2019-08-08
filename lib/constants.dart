@@ -8,9 +8,14 @@ const Color kactiveColor = Colors.white;
 const Color kinactiveColor = Colors.white70;
 const Color kButtonColor = Color(0xFF000912);
 const Color kListColor = Color(0xFF002749);
+const Color boxButtonColor = Color(0xFF4C4F5E);
 
 List<String> carType = ["two-wheeler", "three-wheeler", "four-wheeler"];
 List<String> fuelType = ["petrol", "diesel", "CNG"];
+
+const BoxConstraints kSizeConstraints = BoxConstraints.tightFor(
+  width: 30.0,
+);
 
 const TextStyle appBarTextStyle =
     TextStyle(fontFamily: 'LibreBaskerville', fontWeight: FontWeight.bold);
@@ -44,3 +49,12 @@ const TextStyle packRateTextStyle = TextStyle(
     color: Colors.red,
     fontFamily: 'LibreBaskerville',
     fontWeight: FontWeight.bold);
+
+const TextStyle textFieldTextStyle = TextStyle(
+    color: Colors.black, fontFamily: 'LibreBaskerville', fontSize: 12.0);
+
+const Decoration containerDecoration = BoxDecoration(
+    gradient: LinearGradient(colors: <Color>[
+  kbackgroundStartColor,
+  kbackgroundEndColor,
+], begin: Alignment.topLeft, end: Alignment.bottomRight));

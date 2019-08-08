@@ -36,7 +36,7 @@ class ExpandableList extends StatelessWidget {
                     itemBuilder: (_, i) {
                       return Container(
                         margin: EdgeInsets.all(5.0),
-                        height: 40.0,
+                        height: 50.0,
                         child: Row(
                           children: <Widget>[
                             Expanded(
@@ -76,6 +76,33 @@ class ExpandableList extends StatelessWidget {
                                         .invoicePrice
                                         .toString()),
                                     style: packRateTextStyle,
+                                  ),
+                                  Container(
+                                    child: Icon(Icons.add),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.rectangle,
+                                        border: Border.all(
+                                            style: BorderStyle.solid)),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 3.0),
+                                    child: TextFormField(
+                                      initialValue: "1",
+                                      keyboardType: TextInputType.number,
+                                      style: textFieldTextStyle,
+                                    ),
+                                    constraints: kSizeConstraints,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.rectangle,
+                                        border: Border.all(
+                                            style: BorderStyle.solid)),
+                                  ),
+                                  Container(
+                                    child: Icon(Icons.remove),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.rectangle,
+                                        border: Border.all(
+                                            style: BorderStyle.solid)),
                                   ),
                                   Icon(
                                     Icons.add_shopping_cart,

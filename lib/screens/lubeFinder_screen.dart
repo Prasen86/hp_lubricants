@@ -7,6 +7,7 @@ import 'package:hp_lubricants/Utilities/LubeClass.dart';
 import 'package:hp_lubricants/Utilities/VehicleChoiceMaterialButton.dart';
 import 'package:hp_lubricants/Utilities/ExpandableList.dart';
 import 'package:hp_lubricants/Utilities/CustomButton.dart';
+import 'package:hp_lubricants/screens/lubeDisplay_screen.dart';
 
 List<Lube> package = [];
 
@@ -50,111 +51,116 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'HP Lubricants',
-          style: appBarTextStyle,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'HP Lubricants',
+            style: appBarTextStyle,
+          ),
+          leading: Image.asset(
+            'assets/images/icon_hplubricrant.png',
+          ),
         ),
-        leading: Image.asset(
-          'assets/images/icon_hplubricrant.png',
+        body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: <Color>[
+            kbackgroundStartColor,
+            kbackgroundEndColor,
+          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.all(5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    VehicleChoiceMaterialButton(
+                      icon: Icons.motorcycle,
+                      title: vehicles.wheels,
+                      onpressed: () async {
+                        var data = await _awaitSyncData(context, carType);
+                        setState(() {
+                          vehicles.wheels = data;
+                          isFuelButtonActive = true;
+                        });
+                      },
+                    ),
+                    VehicleChoiceMaterialButton(
+                        title: vehicles.fuel,
+                        icon: Icons.question_answer,
+                        onpressed: isFuelButtonActive
+                            ? () async {
+                                var data =
+                                    await _awaitSyncData(context, fuelType);
+                                setState(() {
+                                  vehicles.fuel = data;
+                                  isMakeButtonActive = true;
+                                });
+                              }
+                            : null),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    VehicleChoiceMaterialButton(
+                        title: vehicles.make,
+                        icon: Icons.question_answer,
+                        onpressed: isMakeButtonActive
+                            ? () async {
+                                List<String> list =
+                                    await Vehicles.getMakeList(vehicles);
+                                var data = await _awaitSyncData(context, list);
+                                setState(() {
+                                  vehicles.make = data;
+                                  isModelButtonActive = true;
+                                });
+                              }
+                            : null),
+                    VehicleChoiceMaterialButton(
+                        title: vehicles.model,
+                        icon: Icons.question_answer,
+                        onpressed: isModelButtonActive
+                            ? () async {
+                                List<String> list =
+                                    await Vehicles.getModelList(vehicles);
+                                var data = await _awaitSyncData(context, list);
+                                setState(() {
+                                  vehicles.model = data;
+                                  //getLubeList();
+                                });
+                              }
+                            : null),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 40.0),
+                child: new CustomButton(
+                  title: "Get PACKAGE",
+                  onpressed: () async {
+                    package = await Lube.getPackagesList(vehicles);
+                    Navigator.pushNamed(context, LubeDisplayScreen.id,
+                        arguments: package);
+                    //setState(() {});
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: <Color>[
-          kbackgroundStartColor,
-          kbackgroundEndColor,
-        ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.all(5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  VehicleChoiceMaterialButton(
-                    icon: Icons.motorcycle,
-                    title: vehicles.wheels,
-                    onpressed: () async {
-                      var data = await _awaitSyncData(context, carType);
-                      setState(() {
-                        vehicles.wheels = data;
-                        isFuelButtonActive = true;
-                      });
-                    },
-                  ),
-                  VehicleChoiceMaterialButton(
-                      title: vehicles.fuel,
-                      icon: Icons.question_answer,
-                      onpressed: isFuelButtonActive
-                          ? () async {
-                              var data =
-                                  await _awaitSyncData(context, fuelType);
-                              setState(() {
-                                vehicles.fuel = data;
-                                isMakeButtonActive = true;
-                              });
-                            }
-                          : null),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.all(5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  VehicleChoiceMaterialButton(
-                      title: vehicles.make,
-                      icon: Icons.question_answer,
-                      onpressed: isMakeButtonActive
-                          ? () async {
-                              List<String> list =
-                                  await Vehicles.getMakeList(vehicles);
-                              var data = await _awaitSyncData(context, list);
-                              setState(() {
-                                vehicles.make = data;
-                                isModelButtonActive = true;
-                              });
-                            }
-                          : null),
-                  VehicleChoiceMaterialButton(
-                      title: vehicles.model,
-                      icon: Icons.question_answer,
-                      onpressed: isModelButtonActive
-                          ? () async {
-                              List<String> list =
-                                  await Vehicles.getModelList(vehicles);
-                              var data = await _awaitSyncData(context, list);
-                              setState(() {
-                                vehicles.model = data;
-                                //getLubeList();
-                              });
-                            }
-                          : null),
-                ],
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 40.0),
-              child: new CustomButton(
-                title: "Get PACKAGE",
-                onpressed: () async {
-                  package = await Lube.getPackagesList(vehicles);
-                  setState(() {});
-                },
-              ),
-            ),
-            Expanded(
-              child: ExpandableList(
-                package: package,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.search),
+            backgroundColor: kButtonColor,
+            onPressed: () async {
+              package = await Lube.getAllLubesList();
+              Navigator.pushNamed(context, LubeDisplayScreen.id,
+                  arguments: package);
+            }));
   }
 }
