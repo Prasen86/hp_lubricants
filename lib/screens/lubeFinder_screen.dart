@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hp_lubricants/Utilities/BaseAppBar.dart';
 import 'package:hp_lubricants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hp_lubricants/screens/PickCar_screen.dart';
@@ -51,15 +52,11 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            'HP Lubricants',
-            style: appBarTextStyle,
-          ),
-          leading: Image.asset(
-            'assets/images/icon_hplubricrant.png',
-          ),
+        appBar: BaseAppBar(
+          title: "Choose your Vehicle",
+          leadingImage: 'assets/images/icon_hplubricrant.png',
+          appBar: AppBar(),
+          //widgets: <Widget>[Icon(Icons.shopping_cart)],
         ),
         body: Container(
           decoration: BoxDecoration(
@@ -81,8 +78,10 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                       onpressed: () async {
                         var data = await _awaitSyncData(context, carType);
                         setState(() {
-                          vehicles.wheels = data;
-                          isFuelButtonActive = true;
+                          if (data != null) {
+                            vehicles.wheels = data;
+                            isFuelButtonActive = true;
+                          }
                         });
                       },
                     ),
@@ -94,8 +93,10 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                                 var data =
                                     await _awaitSyncData(context, fuelType);
                                 setState(() {
-                                  vehicles.fuel = data;
-                                  isMakeButtonActive = true;
+                                  if (data != null) {
+                                    vehicles.fuel = data;
+                                    isMakeButtonActive = true;
+                                  }
                                 });
                               }
                             : null),
@@ -116,8 +117,10 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                                     await Vehicles.getMakeList(vehicles);
                                 var data = await _awaitSyncData(context, list);
                                 setState(() {
-                                  vehicles.make = data;
-                                  isModelButtonActive = true;
+                                  if (data != null) {
+                                    vehicles.make = data;
+                                    isModelButtonActive = true;
+                                  }
                                 });
                               }
                             : null),
@@ -130,7 +133,9 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
                                     await Vehicles.getModelList(vehicles);
                                 var data = await _awaitSyncData(context, list);
                                 setState(() {
-                                  vehicles.model = data;
+                                  if (data != null) {
+                                    vehicles.model = data;
+                                  }
                                   //getLubeList();
                                 });
                               }
@@ -141,11 +146,13 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 40.0),
                 child: new CustomButton(
-                  title: "Get PACKAGE",
+                  title: "Recommended Lubes",
                   onpressed: () async {
                     package = await Lube.getPackagesList(vehicles);
-                    Navigator.pushNamed(context, LubeDisplayScreen.id,
-                        arguments: package);
+                    if (package != null) {
+                      Navigator.pushNamed(context, LubeDisplayScreen.id,
+                          arguments: package);
+                    }
                     //setState(() {});
                   },
                 ),
