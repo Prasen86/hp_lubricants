@@ -14,9 +14,10 @@ class ExpandableList extends StatelessWidget {
               backgroundColor: kListColor,
               leading: new Image(
                 //image: new AssetImage("assets/images/racer4.jpg"),
-                //TODO
                 image: NetworkImage(package[index].imageUrl),
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
+                width: 50.0,
+                height: 50.0,
               ),
               trailing: Icon(
                 Icons.add,
