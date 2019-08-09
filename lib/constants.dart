@@ -10,6 +10,8 @@ const Color kButtonColor = Color(0xFF000912);
 const Color kListColor = Color(0xFF002749);
 const Color boxButtonColor = Color(0xFF4C4F5E);
 const Color kPrimaryColor = Color(0xFF00264A);
+const Color kCircleAvatarBackground = Colors.red;
+const Color kIconColor = Colors.white;
 
 const double kIconSize = 15.0;
 

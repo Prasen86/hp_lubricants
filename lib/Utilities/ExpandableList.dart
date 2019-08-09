@@ -18,6 +18,10 @@ class ExpandableList extends StatelessWidget {
                 image: NetworkImage(package[index].imageUrl),
                 fit: BoxFit.cover,
               ),
+              trailing: Icon(
+                Icons.add,
+                color: Colors.grey,
+              ),
               title: ListTile(
                 title: new Text(
                   package[index].name.toUpperCase(),
@@ -137,8 +141,10 @@ class ExpandableList extends StatelessWidget {
                                       width: 5.0,
                                     ),
                                     CircleAvatar(
+                                      backgroundColor: kCircleAvatarBackground,
                                       child: Icon(
                                         Icons.add_shopping_cart,
+                                        color: kIconColor,
                                       ),
                                     ),
                                   ],
