@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Lube {
   String name;
   String type;
+  String imageUrl;
+  String description;
   List<Package> packages;
 
-  Lube({this.name, this.type, this.packages});
+  Lube({this.name, this.type, this.packages, this.imageUrl, this.description});
 
   static Future<List<Lube>> getPackagesList(Vehicles vehicle) async {
     List<Lube> listLubes = new List<Lube>();
@@ -29,6 +31,8 @@ class Lube {
             .document(lubeName)
             .get();
         String type = lubeType.data["type"];
+        String imageUrl = lubeType.data["image"];
+        String description = lubeType.data["description"];
         List<Package> listPackages = new List<Package>();
         var messages = await Firestore.instance
             .collection("lubes")
@@ -46,6 +50,8 @@ class Lube {
         Lube tempLube = new Lube(
           name: lubeName,
           type: type,
+          imageUrl: imageUrl,
+          description: description,
           packages: listPackages,
         );
         listLubes.add(tempLube);
@@ -62,13 +68,14 @@ class Lube {
     List<Lube> listLubes = new List<Lube>();
 
     try {
-      List<String> lubeNamesList = new List<String>();
       final messages =
           await Firestore.instance.collection("lubes").getDocuments();
 
       for (var message in messages.documents) {
         String lubeName = message.data["name"];
         String type = message.data["type"];
+        String imageUrl = message.data["image"];
+        String description = message.data["description"];
         List<Package> listPackages = new List<Package>();
         var messagePacks = await Firestore.instance
             .collection("lubes")
@@ -86,6 +93,8 @@ class Lube {
         Lube tempLube = new Lube(
           name: lubeName,
           type: type,
+          imageUrl: imageUrl,
+          description: description,
           packages: listPackages,
         );
         listLubes.add(tempLube);
