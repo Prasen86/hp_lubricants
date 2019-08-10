@@ -8,6 +8,7 @@ import 'package:hp_lubricants/Utilities/LubeClass.dart';
 import 'package:hp_lubricants/Utilities/VehicleChoiceMaterialButton.dart';
 import 'package:hp_lubricants/Utilities/CustomButton.dart';
 import 'package:hp_lubricants/screens/lubeDisplay_screen.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 List<Lube> package = [];
 
@@ -22,6 +23,7 @@ class LubeFinderScreen extends StatefulWidget {
 }
 
 class _LubeFinderScreenState extends State<LubeFinderScreen> {
+  bool showSpinner = false;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   //final Firestore _firestore = Firestore.instance;
   Vehicles vehicles = new Vehicles(
@@ -48,6 +50,18 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
     return result;
   }
 
+  void showProgress() {
+    setState(() {
+      showSpinner = true;
+    });
+  }
+
+  void noShowProgress() {
+    setState(() {
+      showSpinner = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,115 +72,127 @@ class _LubeFinderScreenState extends State<LubeFinderScreen> {
           appBar: AppBar(),
           //widgets: <Widget>[Icon(Icons.shopping_cart)],
         ),
-        body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(colors: <Color>[
-            kbackgroundStartColor,
-            kbackgroundEndColor,
-          ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.all(5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    VehicleChoiceMaterialButton(
-                      icon: Icons.motorcycle,
-                      title: vehicles.wheels,
-                      onpressed: () async {
-                        var data = await _awaitSyncData(context, carType);
-                        setState(() {
-                          if (data != null) {
-                            vehicles.wheels = data;
-                            isFuelButtonActive = true;
-                          }
-                        });
-                      },
-                    ),
-                    VehicleChoiceMaterialButton(
-                        title: vehicles.fuel,
-                        icon: Icons.question_answer,
-                        onpressed: isFuelButtonActive
-                            ? () async {
-                                var data =
-                                    await _awaitSyncData(context, fuelType);
-                                setState(() {
-                                  if (data != null) {
-                                    vehicles.fuel = data;
-                                    isMakeButtonActive = true;
-                                  }
-                                });
-                              }
-                            : null),
-                  ],
+        body: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: <Color>[
+              kbackgroundStartColor,
+              kbackgroundEndColor,
+            ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      VehicleChoiceMaterialButton(
+                        icon: Icons.motorcycle,
+                        title: vehicles.wheels,
+                        onpressed: () async {
+                          var data = await _awaitSyncData(context, carType);
+                          setState(() {
+                            if (data != null) {
+                              vehicles.wheels = data;
+                              isFuelButtonActive = true;
+                            }
+                          });
+                        },
+                      ),
+                      VehicleChoiceMaterialButton(
+                          title: vehicles.fuel,
+                          icon: Icons.question_answer,
+                          onpressed: isFuelButtonActive
+                              ? () async {
+                                  var data =
+                                      await _awaitSyncData(context, fuelType);
+                                  setState(() {
+                                    if (data != null) {
+                                      vehicles.fuel = data;
+                                      isMakeButtonActive = true;
+                                    }
+                                  });
+                                }
+                              : null),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.all(5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    VehicleChoiceMaterialButton(
-                        title: vehicles.make,
-                        icon: Icons.question_answer,
-                        onpressed: isMakeButtonActive
-                            ? () async {
-                                List<String> list =
-                                    await Vehicles.getMakeList(vehicles);
-                                var data = await _awaitSyncData(context, list);
-                                setState(() {
-                                  if (data != null) {
-                                    vehicles.make = data;
-                                    isModelButtonActive = true;
-                                  }
-                                });
-                              }
-                            : null),
-                    VehicleChoiceMaterialButton(
-                        title: vehicles.model,
-                        icon: Icons.question_answer,
-                        onpressed: isModelButtonActive
-                            ? () async {
-                                List<String> list =
-                                    await Vehicles.getModelList(vehicles);
-                                var data = await _awaitSyncData(context, list);
-                                setState(() {
-                                  if (data != null) {
-                                    vehicles.model = data;
-                                  }
-                                  //getLubeList();
-                                });
-                              }
-                            : null),
-                  ],
+                Container(
+                  margin: EdgeInsets.all(5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      VehicleChoiceMaterialButton(
+                          title: vehicles.make,
+                          icon: Icons.question_answer,
+                          onpressed: isMakeButtonActive
+                              ? () async {
+                                  showProgress();
+                                  List<String> list =
+                                      await Vehicles.getMakeList(vehicles);
+                                  var data =
+                                      await _awaitSyncData(context, list);
+                                  setState(() {
+                                    showSpinner = false;
+                                    if (data != null) {
+                                      vehicles.make = data;
+                                      isModelButtonActive = true;
+                                    }
+                                  });
+                                }
+                              : null),
+                      VehicleChoiceMaterialButton(
+                          title: vehicles.model,
+                          icon: Icons.question_answer,
+                          onpressed: isModelButtonActive
+                              ? () async {
+                                  showProgress();
+                                  List<String> list =
+                                      await Vehicles.getModelList(vehicles);
+                                  var data =
+                                      await _awaitSyncData(context, list);
+                                  setState(() {
+                                    showSpinner = false;
+                                    if (data != null) {
+                                      vehicles.model = data;
+                                    }
+                                    //getLubeList();
+                                  });
+                                }
+                              : null),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 40.0),
-                child: new CustomButton(
-                  title: "Recommended Lubes",
-                  onpressed: () async {
-                    package = await Lube.getPackagesList(vehicles);
-                    if (package != null) {
-                      Navigator.pushNamed(context, LubeDisplayScreen.id,
-                          arguments: package);
-                    }
-                    //setState(() {});
-                  },
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 40.0),
+                  child: new CustomButton(
+                    title: "Recommended Lubes",
+                    onpressed: () async {
+                      showProgress();
+                      package = await Lube.getPackagesList(vehicles);
+                      if (package != null) {
+                        Navigator.pushNamed(context, LubeDisplayScreen.id,
+                            arguments: package);
+                      }
+                      noShowProgress();
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.search),
             backgroundColor: kButtonColor,
             onPressed: () async {
+              showProgress();
               package = await Lube.getAllLubesList();
               Navigator.pushNamed(context, LubeDisplayScreen.id,
                   arguments: package);
+              noShowProgress();
             }));
   }
 }
