@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hp_lubricants/constants.dart';
+import 'package:hp_lubricants/screens/description_screen.dart';
 import 'LubeClass.dart';
 
 class ExpandableList extends StatelessWidget {
@@ -12,12 +13,21 @@ class ExpandableList extends StatelessWidget {
     return new ListView.builder(
       itemBuilder: (context, index) => ExpansionTile(
               backgroundColor: kListColor,
-              leading: new Image(
-                //image: new AssetImage("assets/images/racer4.jpg"),
-                image: NetworkImage(package[index].imageUrl),
-                fit: BoxFit.contain,
-                width: 50.0,
-                height: 50.0,
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, DescriptionScreen.id,
+                      arguments: package[index]);
+                },
+                child: Hero(
+                  tag: package[index].name,
+                  child: new Image(
+                    //image: new AssetImage("assets/images/racer4.jpg"),
+                    image: NetworkImage(package[index].imageUrl),
+                    fit: BoxFit.contain,
+                    width: 50.0,
+                    height: 50.0,
+                  ),
+                ),
               ),
               trailing: Icon(
                 Icons.add,

@@ -4,6 +4,7 @@ import 'screens/splash_screen.dart';
 import 'screens/lubeFinder_screen.dart';
 import 'screens/PickCar_screen.dart';
 import 'screens/lubeDisplay_screen.dart';
+import 'screens/description_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         LubeFinderScreen.id: (context) => LubeFinderScreen(),
         PickCar.id: (context) => PickCar(),
         LubeDisplayScreen.id: (context) => LubeDisplayScreen(),
+        DescriptionScreen.id: (context) => DescriptionScreen(),
       },
     );
   }
