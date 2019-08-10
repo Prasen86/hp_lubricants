@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hp_lubricants/Utilities/BaseAppBar.dart';
+import 'package:hp_lubricants/constants.dart';
 
 class PickCar extends StatelessWidget {
   static String id = 'pickCar_screen';
@@ -18,18 +19,24 @@ class PickCar extends StatelessWidget {
         appBar: AppBar(),
         //widgets: <Widget>[Icon(Icons.shopping_cart)],
       ),
-      body: ListView.builder(
-        //Retrieve data for StateFul Widget
-        itemCount: dataList.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('${dataList[index]}'),
-            onTap: () {
-              // Vehicles vehicles = new Vehicles(wheels: dataList[index]);
-              Navigator.pop(context, dataList[index]);
-            },
-          );
-        },
+      body: Container(
+        decoration: containerDecoration,
+        child: ListView.builder(
+          //Retrieve data for StateFul Widget
+          itemCount: dataList.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(
+                '${dataList[index].toUpperCase()}',
+                style: titleTextStyle,
+              ),
+              onTap: () {
+                // Vehicles vehicles = new Vehicles(wheels: dataList[index]);
+                Navigator.pop(context, dataList[index]);
+              },
+            );
+          },
+        ),
       ),
     );
   }

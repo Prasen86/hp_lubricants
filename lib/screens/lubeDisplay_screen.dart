@@ -12,6 +12,7 @@ class LubeDisplayScreen extends StatefulWidget {
 
 class _LubeDisplayScreenState extends State<LubeDisplayScreen> {
   List<Lube> filteredLubes = new List<Lube>();
+  bool isDisplayActive = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -48,15 +49,14 @@ class _LubeDisplayScreenState extends State<LubeDisplayScreen> {
                             .toLowerCase()
                             .contains(string.toLowerCase())))
                         .toList();
-                    //filteredLubes = filteredLubesTemp;
-                    print(filteredLubes.length);
+                    isDisplayActive = true;
                   });
                 },
               ),
             ),
             Expanded(
               child: ExpandableList(
-                package: filteredLubes.isEmpty ? lubes : filteredLubes,
+                package: isDisplayActive ? filteredLubes : lubes,
                 //filteredLubes.isEmpty ? lubes : filteredLubes,
               ),
             ),
