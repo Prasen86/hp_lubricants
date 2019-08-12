@@ -42,7 +42,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
               child: Container(
                 child: Text(
                   lube.description,
-                  style: packRateTextStyle,
+                  style: descRateTextStyle,
                 ),
               ),
             ),

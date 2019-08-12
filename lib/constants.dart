@@ -55,6 +55,11 @@ const TextStyle packRateTextStyle = TextStyle(
   fontFamily: 'LibreBaskerville',
   fontWeight: FontWeight.bold,
 );
+const TextStyle descRateTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'LibreBaskerville',
+  fontWeight: FontWeight.bold,
+);
 
 const TextStyle textFieldTextStyle = TextStyle(
     color: Colors.black, fontFamily: 'LibreBaskerville', fontSize: 12.0);
